@@ -2,7 +2,7 @@
 
 fun isValidIsbn(isbn:String) : Boolean =
         try {
-            isbn.toBigInteger()
+            isbn.replace("\\s|\\-".toRegex(), "").toBigInteger()
             true
         } catch (e : NumberFormatException){
             false

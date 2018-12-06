@@ -29,6 +29,7 @@ internal class IsbnTest {
         assert(isValidIsbn("0 471 60695 2")).isTrue()
         assert(isValidIsbn("0-470-84525-2")).isTrue()
         assert(isValidIsbn("0-321-14653-0")).isTrue()
+        assert(isValidIsbn("0-8044-2957-X")).isTrue()
     }
 
     @Test

@@ -2,7 +2,10 @@ fun isValidIsbn(isbn: String): Boolean {
     val normalizedIsbn = isbn.replace("\\s|\\-".toRegex(), "")
 
     try {
-        normalizedIsbn.toBigInteger()
+        if(normalizedIsbn.length == 10 && normalizedIsbn.substring(9) == "X")
+            normalizedIsbn.substring(0, 8).toBigInteger()
+        else
+            normalizedIsbn.toBigInteger()
     } catch (e: NumberFormatException) {
         return false
     }
@@ -57,4 +60,10 @@ private fun calculateSumForDigit(index: Int, isbnDigit: Int): Int =
 
 fun Int.isOdd(): Boolean = this % 2 != 0
 
-internal fun String.getIntAt(index: Int): Int = this[index - 1].toString().toInt()
+internal fun String.getIntAt(index: Int): Int {
+    val digit = this[index - 1].toString()
+    return when (digit) {
+        "X" -> 10
+        else -> digit.toInt()
+    }
+}

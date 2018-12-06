@@ -13,7 +13,22 @@ fun isValidIsbn(isbn: String): Boolean {
         validate13IsbnChecksum(normalizedIsbn)
 }
 
-fun validate10IsbnChecksum(normalizedIsbn: String): Boolean = true
+fun validate10IsbnChecksum(isbn: String): Boolean {
+    val sum = calculate10DigitSum(isbn)
+
+    val reducedSum = sum % 11
+    val checkSumDigit = isbn.getIntAt(10)
+
+    return reducedSum == checkSumDigit
+}
+
+fun calculate10DigitSum(isbn: String): Int {
+    var sum = 0
+    for (i in 1..9){
+        sum += i * isbn.getIntAt(i)
+    }
+    return sum
+}
 
 internal fun validate13IsbnChecksum(isbn: String): Boolean {
     var sum = calculateSum(isbn)

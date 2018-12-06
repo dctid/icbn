@@ -1,6 +1,4 @@
-
-
-fun isValidIsbn(isbn : String) : Boolean {
+fun isValidIsbn(isbn: String): Boolean {
     val normalizedIsbn = isbn.replace("\\s|\\-".toRegex(), "")
 
     try {
@@ -9,11 +7,15 @@ fun isValidIsbn(isbn : String) : Boolean {
         return false
     }
 
-    return validate13IsbnChecksum(normalizedIsbn)
+    return if (normalizedIsbn.length == 10)
+        validate10IsbnChecksum(normalizedIsbn)
+    else
+        validate13IsbnChecksum(normalizedIsbn)
 }
 
+fun validate10IsbnChecksum(normalizedIsbn: String): Boolean = true
 
-internal fun validate13IsbnChecksum (isbn : String) : Boolean {
+internal fun validate13IsbnChecksum(isbn: String): Boolean {
     var sum = calculateSum(isbn)
 
     val reducedSum = (10 - sum % 10) % 10
@@ -31,13 +33,13 @@ private fun calculateSum(isbn: String): Int {
 }
 
 private fun calculateSumForDigit(index: Int, isbnDigit: Int): Int =
-        if(index.isOdd()) {
+        if (index.isOdd()) {
             isbnDigit
         } else {
             isbnDigit * 3
         }
 
 
-fun Int.isOdd() : Boolean = this % 2 != 0
+fun Int.isOdd(): Boolean = this % 2 != 0
 
-internal fun String.getIntAt(index : Int) : Int = this[index-1].toString().toInt()
+internal fun String.getIntAt(index: Int): Int = this[index - 1].toString().toInt()

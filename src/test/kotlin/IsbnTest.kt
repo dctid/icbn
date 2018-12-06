@@ -23,4 +23,12 @@ internal class IsbnTest {
         assert(isValidIsbn("9780470059023")).isFalse()
     }
 
+
+    @Test
+    fun `should return true with valid 10 digit isbn`() {
+        assert(isValidIsbn("0471958697")).isTrue()
+        assert(isValidIsbn("0 471 60695 2")).isTrue()
+        assert(isValidIsbn("0-470-84525-2")).isTrue()
+        assert(isValidIsbn("0-321-14653-0")).isTrue()
+    }
 }

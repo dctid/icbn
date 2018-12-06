@@ -14,8 +14,13 @@ internal class IsbnTest {
     }
 
     @Test
-    fun `should return false with invalid 13 digit isbn`() {
+    fun `should return false with alphas in 13 digit isbn`() {
         assert(isValidIsbn("X780470059029")).isFalse()
+    }
+
+    @Test
+    fun `should return false with invalid checksum 13 digit isbn`() {
+        assert(isValidIsbn("9780470059023")).isFalse()
     }
 
 }

@@ -7,33 +7,34 @@ internal class IsbnTest {
 
     @Test
     fun `should return true with valid 13 digit isbn`() {
-        assert(isValidIsbn("9780470059029")).isTrue()
-        assert(isValidIsbn("978 0 471 48648 0")).isTrue()
-        assert(isValidIsbn("978-0596809485")).isTrue()
-        assert(isValidIsbn("978-0-13-149505-0")).isTrue()
+        assert("9780470059029".isValidIsbn()).isTrue()
+        assert("978 0 471 48648 0".isValidIsbn()).isTrue()
+        assert("978-0596809485".isValidIsbn()).isTrue()
+        assert("978-0-13-149505-0".isValidIsbn()).isTrue()
     }
 
     @Test
     fun `should return false with alphas in 13 digit isbn`() {
-        assert(isValidIsbn("X780470059029")).isFalse()
+        assert("X7804m0059029".isValidIsbn()).isFalse()
     }
 
     @Test
     fun `should return false with invalid checksum 13 digit isbn`() {
-        assert(isValidIsbn("9780470059023")).isFalse()
+        assert("9780470059023".isValidIsbn()).isFalse()
     }
 
     @Test
     fun `should return true with valid 10 digit isbn`() {
-        assert(isValidIsbn("0471958697")).isTrue()
-        assert(isValidIsbn("0 471 60695 2")).isTrue()
-        assert(isValidIsbn("0-470-84525-2")).isTrue()
-        assert(isValidIsbn("0-321-14653-0")).isTrue()
-        assert(isValidIsbn("0-8044-2957-X")).isTrue()
+        assert("0471958697".isValidIsbn()).isTrue()
+        assert("0 471 60695 2".isValidIsbn()).isTrue()
+        assert("0-470-84525-2".isValidIsbn()).isTrue()
+        assert("0-321-14653-0".isValidIsbn()).isTrue()
+        assert("0-8044-2957-X".isValidIsbn()).isTrue()
     }
 
     @Test
     fun `should return false with invalid checksum 10 digit isbn`() {
-        assert(isValidIsbn("0471958699")).isFalse()
+        assert("0471958699".isValidIsbn()).isFalse()
     }
+
 }

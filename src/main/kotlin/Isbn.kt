@@ -1,69 +1,55 @@
-fun isValidIsbn(isbn: String): Boolean {
-    val normalizedIsbn = isbn.replace("\\s|\\-".toRegex(), "")
+fun String.isValidIsbn(): Boolean =
+        removeSpacesAndDashes().validate()
 
-    try {
-        if(normalizedIsbn.length == 10 && normalizedIsbn.substring(9) == "X")
-            normalizedIsbn.substring(0, 8).toBigInteger()
-        else
-            normalizedIsbn.toBigInteger()
-    } catch (e: NumberFormatException) {
-        return false
-    }
+private fun String.removeSpacesAndDashes(): String =
+        replace("\\s|-".toRegex(), "")
 
-    return if (normalizedIsbn.length == 10)
-        validate10IsbnChecksum(normalizedIsbn)
-    else
-        validate13IsbnChecksum(normalizedIsbn)
-}
 
-fun validate10IsbnChecksum(isbn: String): Boolean {
-    val sum = calculate10DigitSum(isbn)
-
-    val reducedSum = sum % 11
-    val checkSumDigit = isbn.getIntAt(10)
-
-    return reducedSum == checkSumDigit
-}
-
-fun calculate10DigitSum(isbn: String): Int {
-    var sum = 0
-    for (i in 1..9){
-        sum += i * isbn.getIntAt(i)
-    }
-    return sum
-}
-
-internal fun validate13IsbnChecksum(isbn: String): Boolean {
-    var sum = calculateSum(isbn)
-
-    val reducedSum = (10 - sum % 10) % 10
-    val checkSumDigit = isbn.getIntAt(13)
-
-    return reducedSum == checkSumDigit
-}
-
-private fun calculateSum(isbn: String): Int {
-    var sum = 0
-    for (i in 1..12) {
-        sum += calculateSumForDigit(i, isbn.getIntAt(i))
-    }
-    return sum
-}
-
-private fun calculateSumForDigit(index: Int, isbnDigit: Int): Int =
-        if (index.isOdd()) {
-            isbnDigit
-        } else {
-            isbnDigit * 3
+private fun String.validate(): Boolean =
+        when (length) {
+            10 -> validate10IsbnChecksum()
+            13 -> validate13IsbnChecksum()
+            else -> false
         }
 
+private fun String.validate10IsbnChecksum(): Boolean =
+        calculate10DigitSum() == getChecksum()
 
-fun Int.isOdd(): Boolean = this % 2 != 0
 
-internal fun String.getIntAt(index: Int): Int {
-    val digit = this[index - 1].toString()
-    return when (digit) {
-        "X" -> 10
-        else -> digit.toInt()
-    }
-}
+private fun String.calculate10DigitSum(): Int =
+        subSequence(0, 9)
+                .toList()
+                .withIndex()
+                .sumBy { it.value.toIsbnValue() * (it.index + 1) } % 11
+
+
+private fun String.validate13IsbnChecksum(): Boolean =
+        calculate13DigitChecksum() == getChecksum()
+
+private fun String.calculate13DigitChecksum(): Int =
+        ((10 - calculatePrefixChecksumFor13Isbn() % 10) % 10)
+
+private fun String.calculatePrefixChecksumFor13Isbn(): Int =
+        subSequence(0, 12)
+                .toList()
+                .withIndex()
+                .sumBy { it.value.toIsbnValue().calculateSumForDigit(it.index + 1) }
+
+
+private fun String.getChecksum() = last().toIsbnValue()
+
+private fun Int.calculateSumForDigit(index: Int): Int =
+        if (index.isOdd()) {
+            this
+        } else {
+            this * 3
+        }
+
+private fun Int.isOdd(): Boolean = this % 2 != 0
+
+private fun Char.toIsbnValue(): Int =
+        when (this) {
+            'X' -> 10
+            in '0'..'9' -> Character.getNumericValue(this)
+            else -> -1
+        }
